@@ -1,0 +1,24 @@
+{
+  "status": "0",
+  "msg": "",
+  "resulte": [
+    {
+      "productId": "10001",
+      "productName": "小米Max",
+      "producrPrice": 2499,
+      "producrImage": "1.jpg"
+    },
+    {
+      "productId": "10002",
+      "productName": "小米6",
+      "producrPrice": 499,
+      "producrImage": "2.jpg"
+    },
+    {
+      "productId": "10003",
+      "productName": "小米音响",
+      "producrPrice": 199,
+      "producrImage": "3.jpg"
+    }
+  ]
+}
