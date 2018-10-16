@@ -3,11 +3,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
-// import VueLazyLoad from 'vue-lazyload'
+import VueLazyLoad from 'vue-lazyload'
 
-// Vue.use(VueLazyLoad, {
-//   loading: '/static/loading/loading-balls.svg'
-// })
+Vue.use(VueLazyLoad, {
+  loading: '/static/loading/loading-balls.svg'
+})
+Vue.prototype.baseUrl = 'http://127.0.0.1:3000'
 Vue.prototype.axios = axios
 Vue.config.productionTip = false
 Vue.config.devtools = true
