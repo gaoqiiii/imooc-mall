@@ -48,9 +48,9 @@
                     </div>
                   </li> 
                 </ul>
+                <infinite-loading @infinite="infiniteHandler"></infinite-loading>
               </div>
             </div>
-
             <div class="md-overlay" v-show="maskFlag" @click="closePop"></div>
           </div>
         </div>
@@ -60,6 +60,8 @@
   </div>
 </template>
 <script>
+  import InfiniteLoading from 'vue-infinite-loading'
+
   import './../assets/css/base.css'
   import './../assets/css/product.css'
   import './../assets/css/login.css'
@@ -71,6 +73,7 @@
   export default {
     name: 'GoodsList',
     components: {
+      InfiniteLoading,
       NavHeader,
       NavFooter,
       NavBread
@@ -113,7 +116,7 @@
         this.filterBy = false
         this.maskFlag = false
       },
-      getGoodList() {
+      getGoodList($state) {
         var param = {
           sort: this.sortFlag ? 1 : -1,
           page: this.page,
@@ -123,7 +126,17 @@
           params: param
         }).then(res => {
           if (res.data.status == 0) {
-            this.productList = res.data.result.list
+            if ($state) {
+              this.productList = this.productList.concat(res.data.result.list)
+              $state.loaded()
+              if (res.data.result.count == 0) {
+                $state.complete()
+              }
+            } else {
+              this.productList = res.data.result.list
+            }      
+          } else {
+            this.productList = []
           }
         })
       },
@@ -131,6 +144,12 @@
         this.sortFlag = !this.sortFlag
         this.page = 1
         this.getGoodList()
+      },
+      infiniteHandler($state) { // 滚动加载
+        setTimeout(() => {
+          this.page++
+          this.getGoodList($state)
+        },1500)
       }
     },
     mounted() {

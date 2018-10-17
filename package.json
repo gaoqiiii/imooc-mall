@@ -18,6 +18,8 @@
     "morgan": "~1.9.0",
     "vue": "^2.5.17",
     "vue-bus": "^1.1.0",
+    "vue-infinite-loading": "^2.3.5",
+    "vue-infinite-scroll": "^2.0.2",
     "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

@@ -403,6 +403,11 @@
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  
+}
+.accessory-list {
+  min-height: 600px;
+  overflow-y: auto;
 }
 
 .filter-nav {
