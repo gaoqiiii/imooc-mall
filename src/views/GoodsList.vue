@@ -20,8 +20,8 @@
                 <dt>Price:</dt>
                 <dd>
                   <a href="javascript:void(0)" 
-                    :class="{'cur': priceChecked == 'All'}"
-                    @click="priceChecked = 'All'; maskFlag = false; filterBy = false">All</a>
+                    :class="{'cur': priceChecked == 4}"
+                    @click="setPriceFilter(4)">All</a>
                 </dd>
                 <dd v-for="(item, index) in priceFilter" 
                     :key="index"
@@ -48,7 +48,7 @@
                     </div>
                   </li> 
                 </ul>
-                <infinite-loading @infinite="infiniteHandler"></infinite-loading>
+                <infinite-loading @infinite="infiniteHandler" ref="infiniteLoading" ></infinite-loading>
               </div>
             </div>
             <div class="md-overlay" v-show="maskFlag" @click="closePop"></div>
@@ -84,6 +84,10 @@
         priceFilter: [
           {
             startPrice: '0.00',
+            endPrice: '100.00'
+          },
+          {
+            startPrice: '100.00',
             endPrice: '500.00'
           },
           {
@@ -92,10 +96,10 @@
           },
           {
             startPrice: '1000.00',
-            endPrice: '2000.00'
+            endPrice: '5000.00'
           }
         ],
-        priceChecked: 'All',
+        priceChecked: 4,
         filterBy: false,
         maskFlag: false,
         sortFlag: false,
@@ -108,9 +112,13 @@
         this.filterBy = true
         this.maskFlag = true
       },
-      setPriceFilter(index) {
+      setPriceFilter(index) { // 价格过滤
+        
         this.priceChecked = index
+        this.page = 1
+        this.sort = 1
         this.closePop()
+        this.getGoodList()
       },  
       closePop() {
         this.filterBy = false
@@ -120,21 +128,18 @@
         var param = {
           sort: this.sortFlag ? 1 : -1,
           page: this.page,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          priceLevel: this.priceChecked
         }
+        this.productList = []
         this.axios.get(this.baseUrl +'/goods',{
           params: param
         }).then(res => {
           if (res.data.status == 0) {
-            if ($state) {
-              this.productList = this.productList.concat(res.data.result.list)
-              $state.loaded()
-              if (res.data.result.count == 0) {
-                $state.complete()
-              }
-            } else {
-              this.productList = res.data.result.list
-            }      
+            // this.productList = res.data.result.list
+            this.$nextTick(() => {
+              this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');             
+            });   
           } else {
             this.productList = []
           }
@@ -146,14 +151,36 @@
         this.getGoodList()
       },
       infiniteHandler($state) { // 滚动加载
-        setTimeout(() => {
-          this.page++
-          this.getGoodList($state)
-        },1500)
+        console.log('infiniteHandler')
+        var param = {
+          sort: this.sortFlag ? 1 : -1,
+          page: this.page,
+          pageSize: this.pageSize,
+          priceLevel: this.priceChecked
+        }
+        setTimeout( ()=> {
+          this.page ++
+          this.axios.get(this.baseUrl +'/goods',{
+            params: param
+          }).then(res => {
+            if (res.data.status == 0) {
+              if ($state) {
+                this.productList = this.productList.concat(res.data.result.list)
+                $state.loaded()
+                if (res.data.result.count == 0) {
+                  $state.complete()
+                }
+              } else {
+                this.productList = res.data.result.list
+              }      
+            } else {
+              this.productList = []
+            }
+          })
+        },1000)        
       }
     },
     mounted() {
-      this.getGoodList()
     }
   }
 </script>
