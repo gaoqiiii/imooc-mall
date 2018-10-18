@@ -43,7 +43,7 @@
                       <div class="name">{{item.productName}}</div>
                       <div class="price">￥{{item.salePrice}}</div>
                       <div class="btn-area">
-                        <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                        <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
                       </div>
                     </div>
                   </li> 
@@ -61,7 +61,7 @@
 </template>
 <script>
   import InfiniteLoading from 'vue-infinite-loading'
-
+  import qs from 'qs'
   import './../assets/css/base.css'
   import './../assets/css/product.css'
   import './../assets/css/login.css'
@@ -136,7 +136,6 @@
           params: param
         }).then(res => {
           if (res.data.status == 0) {
-            // this.productList = res.data.result.list
             this.$nextTick(() => {
               this.$refs.infiniteLoading.$emit('$InfiniteLoading:reset');             
             });   
@@ -178,6 +177,17 @@
             }
           })
         },1000)        
+      },
+      addCart(id) { // 加入购物车
+        this.axios.post(this.baseUrl + '/goods/addCart', qs.stringify({
+          productId: id
+        })).then(res => {
+          if (res.data.status == 0) {
+            alert('添加成功')
+          } else {
+            alert('添加失败')
+          }
+        })
       }
     },
     mounted() {
