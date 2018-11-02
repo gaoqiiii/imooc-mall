@@ -150,7 +150,6 @@
         this.getGoodList()
       },
       infiniteHandler($state) { // 滚动加载
-        console.log('infiniteHandler')
         var param = {
           sort: this.sortFlag ? 1 : -1,
           page: this.page,
