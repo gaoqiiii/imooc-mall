@@ -10,7 +10,9 @@
           <div class="filter-nav">
             <span class="sortby">Sort by:</span>
             <a href="javascript:void(0)" class="default cur">Default</a>
-            <a href="javascript:void(0)" class="price" @click="sortGoodList">Price <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
+            <a href="javascript:void(0)" class="price" @click="sortGoodList">Price
+              <img src="./../assets/icon-arrow-short.svg" :class="['icon' ,'icon-arrow-short',{'sort-up': sortFlag}]" alt="">
+            </a>
             <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">Filter by</a>
           </div>
           <div class="accessory-result">
@@ -51,6 +53,26 @@
                 <infinite-loading @infinite="infiniteHandler" ref="infiniteLoading" ></infinite-loading>
               </div>
             </div>
+            <Modal :mdShow='mdShow' v-on:closeModal="mdShow=false">
+              <p slot="message">
+                请先登陆，否则无法加入到购物车中
+              </p>
+              <div slot="btnGroup">
+                <a href="javascript:;" class="btn btn--m" @click="mdShow=false">关闭</a>
+              </div>
+            </Modal>
+            <Modal :mdShow="addCartShow" v-on:closeModal="addCartShow=false">
+              <p slot="message">
+                <img src="../assets/icon-status-ok.svg" class="icon" alt="">
+              </p>
+              <p slot="message">
+                添加成功
+              </p>
+              <div slot="btnGroup">
+                <router-link class="btn btn--m" to="/cart">查看购物车</router-link>
+                <a href="javascript:;" class="btn btn--m" @click="addCartShow=false">继续购物</a>
+              </div>
+            </Modal>
             <div class="md-overlay" v-show="maskFlag" @click="closePop"></div>
           </div>
         </div>
@@ -69,14 +91,15 @@
   import NavHeader from '@/components/NavHeader.vue'
   import NavFooter from '@/components/NavFooter.vue'
   import NavBread from '@/components/NavBread.vue'
-
+  import Modal from '@/components/Modal.vue'
   export default {
     name: 'GoodsList',
     components: {
       InfiniteLoading,
       NavHeader,
       NavFooter,
-      NavBread
+      NavBread,
+      Modal
     },
     data() {
       return {
@@ -104,7 +127,9 @@
         maskFlag: false,
         sortFlag: false,
         page: 1,
-        pageSize: 8
+        pageSize: 8,
+        mdShow: false,
+        addCartShow: false
       }
     },
     methods: {
@@ -182,9 +207,9 @@
           productId: id
         })).then(res => {
           if (res.data.status == 0) {
-            alert('添加成功')
+            this.addCartShow = true
           } else {
-            alert('添加失败')
+            this.mdShow = false
           }
         })
       }
@@ -193,5 +218,18 @@
     }
   }
 </script>
+<style>
+  .icon-arrow-short {
+    transition: all .3s ease-out;
+  }
+  .sort-up {
+    transform: rotate(180deg);
+    transition: all .3s ease-out;
+  }
+  .btn:hover {
+    background-color: #ffe5e6;
+    transition: all .3s ease-out;
+  }
+</style>
 
 

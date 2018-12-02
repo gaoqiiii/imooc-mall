@@ -827,11 +827,11 @@ a:hover {
   margin-top: 0!important;
 }
 
-/*.btn:hover, .btn[href]:hover {
+.btn:hover, .btn[href]:hover {
   background-color: #ffe5e6;
   -webkit-transition: all .3s ease-out;
   transition: all .3s ease-out;
-}*/
+}
 
 .btn--orange, .btn--orange[href] {
   background-color: #ee7a23;
@@ -947,8 +947,7 @@ a:hover {
 }
 
 .select-self-area {
-  width: auto;
-  background: #f0f0f0;
+  display: flex;
   border-radius: 3px;
   min-width: 50px;
   max-width: 240px;
@@ -958,16 +957,21 @@ a:hover {
 
 .select-self-area .select-ipt {
   display: block;
-  min-width: 56px;
+  min-width: 30px;
   height: 100%;
-  padding: 0 25px 0 10px;
   border: 0;
   color: #605F5F;
   text-align: left;
   font-size: 16px;
   overflow: hidden;
+  text-align: center;
 }
-
+.select-self-area .input-add, .select-self-area .input-sub{
+  background: #f0f0f0;
+  display: inline-flex;
+  width: 24px;
+  justify-content: space-around;
+}
 .select-self-area .select-btn {
   position: absolute;
   right: 0;
