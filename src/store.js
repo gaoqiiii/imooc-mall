@@ -5,23 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    todoList: [],
-    todoInfo: {
-      id: 0,
-      text: '',
-      isDone: false
-    },
-    selected: false
-  },
-  getters: {
-    personInfo(state) {
-      return `My name is ${state.name}, I am ${state.age}`
-    }
+    nickName: '',
+    cartCount: 0,
   },
   mutations: {
-
+    updateUserInfo(state, nickName) {
+      state.nickName = nickName
+    },
+    updateCartCount(state, cartCount) {
+      state.cartCount += cartCount
+    }
   },
-  actions: {
-
-  }
 })

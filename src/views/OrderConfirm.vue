@@ -125,7 +125,7 @@
             <router-link to="/address" class="btn btn--m">Previous</router-link>
           </div>
           <div class="next-btn-wrap">
-            <router-link to="payment" class="btn btn--m" @click="payment">Payment</router-link>
+            <button class="btn btn--m" @click="payment">Payment</button>
           </div>
         </div>
       </div>
@@ -179,7 +179,19 @@
         
       },
       payment() {
-        
+        let addressId = this.$route.query.addrssId
+        this.axios.post(this.baseUrl + '/users/payment', qs.stringify({
+          userId: 100000077,
+          orderTotal: this.orderTotal,
+          addressId: addressId
+        })).then(response => {
+          let res = response.data
+          if (res.status == '0') {
+            this.$router.push({
+              path: '/orderSuccess?orderId='+res.result.orderId 
+            })
+          }
+        })
       }
     },
     created() {

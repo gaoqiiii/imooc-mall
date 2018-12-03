@@ -23,6 +23,11 @@ export default new Router({
       path: '/orderConfirm',
       name: 'orderConfirm',
       component: () => import('./views/OrderConfirm.vue')
+    },
+    {
+      path: '/orderSuccess',
+      name: 'orderSuccess',
+      component: () => import('./views/orderSuccess.vue')
     }
   ]
 })

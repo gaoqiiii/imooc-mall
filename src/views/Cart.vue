@@ -92,7 +92,7 @@
                 <div class="cart-tab-4">
                   <div class="item-price-total">{{item.productNum*item.salePrice}}</div>
                 </div>
-                <div class="cart-tab-5" @click="delComfirm(item.productId)">
+                <div class="cart-tab-5" @click="delComfirm(item)">
                   <div class="cart-item-opration">
                     <a href="javascript:;" class="item-edit-btn">
                       <svg class="icon icon-del">
@@ -163,7 +163,7 @@
       return {
         cartList: [],
         checkDel: false,
-        productId: ''
+        delProduct: null
       }
     },
     computed: {
@@ -198,8 +198,8 @@
           this.cartList = data
         })
       },
-      delComfirm(id) {
-        this.productId = id
+      delComfirm(item) {
+        this.delProduct = item
         this.checkDel = true
       },
       closeCheckDel() {
@@ -208,11 +208,12 @@
       delCart() {
         this.axios.post(this.baseUrl +'/users/cartDel', qs.stringify({
           userId: 100000077,
-          productId: this.productId
+          productId: this.delProduct.productId
         })).then(response => {
           let res = response.data
           if (res.status == '0') {
             this.checkDel = false
+            this.$store.commit('updateCartCount', -this.delProduct.productNum)
             this.init()
           }
         })
@@ -235,6 +236,13 @@
           checked: item.checked
         })).then(response => {
           let res = response.data
+          let num = 0
+          if (flag == 'add') {
+            num = 1
+          } else if (flag == 'sub'){
+            num = -1
+          }
+          this.$store.commit('updateCartCount', num)
         })
       },
       toggleCheckAll() {

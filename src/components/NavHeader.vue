@@ -19,7 +19,7 @@
           <a href="javascript:void(0)" class="navbar-link" @click="loginModalFlag = true; errorTip = false" v-show="!nickName">Login</a>
           <a href="javascript:void(0)" class="navbar-link" @click="logout" v-if="nickName">Logout</a>
           <div class="navbar-cart-container">
-            <span class="navbar-cart-count"></span>
+            <span class="navbar-cart-count">{{cartCount}}</span>
             <a class="navbar-link navbar-cart-link" href="/#/cart">
               <svg class="navbar-cart-logo">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
@@ -79,8 +79,15 @@
         userName: '',
         userPwd: '',
         errorTip: false,
-        loginModalFlag: false,
-        nickName: ''
+        loginModalFlag: false
+      }
+    },
+    computed: {
+      nickName () {
+        return this.$store.state.nickName
+      },
+      cartCount() {
+        return this.$store.state.cartCount
       }
     },
     methods: {
@@ -97,7 +104,8 @@
           if (data.status == '0') {
             this.errorTip = false
             this.loginModalFlag = false
-            this.nickName = data.result.userName
+            this.$store.commit('updateUserInfo', data.result.userName)
+            this.getCartCount()
           } else {
             this.errorTip = true
           }
@@ -106,10 +114,18 @@
       logout() {
         this.axios.post(this.baseUrl + '/users/logout').then(res => {
           if (res.data.status == '0') {
-            this.nickName = ''
-            this.userName = ''
+            // this.$store.commit('updateUserInfo', '')
+            // this.$store.commit('updateCartCount', 0)
             this.userPwd = ''
           }
+        })
+      },
+      getCartCount() {
+        this.axios.post(this.baseUrl + '/users/getCartCount',qs.stringify({
+          userId: 100000077   
+        })).then(response => {
+          let res = response.data
+          this.$store.commit('updateCartCount',res.result)
         })
       }
     }

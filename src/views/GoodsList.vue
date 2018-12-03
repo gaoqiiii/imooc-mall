@@ -208,6 +208,7 @@
         })).then(res => {
           if (res.data.status == 0) {
             this.addCartShow = true
+            this.$store.commit('updateCartCount', 1)
           } else {
             this.mdShow = false
           }
